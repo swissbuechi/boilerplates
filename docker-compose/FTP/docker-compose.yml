@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  ftpd_server:
+    image: stilliard/pure-ftpd
+    container_name: pure-ftpd
+    ports:
+      - "2121:21"
+      - "30000-30009:30000-30009"
+    volumes:
+      - "./data:/home/"
+      - "./passwd:/etc/pure-ftpd/passwd"
+
+    environment:
+      PUBLICHOST: "ftp.example.com"
+#      PUBLICHOST: "pure-ftpd"
+#      FTP_USER_NAME: backup
+#      FTP_USER_PASS: 
+#      FTP_USER_HOME: /home/backup
+
+    restart: unless-stopped

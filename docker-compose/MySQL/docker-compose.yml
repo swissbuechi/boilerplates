@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+    mysql:
+        image: 'mysql:latest'
+        environment:
+            - MYSQL_ROOT_PASSWORD=toor
+        ports:
+            - '3306:3306'
+        volumes:
+            - dbdata01:/var/lib/mysql
+volumes:
+    dbdata01:

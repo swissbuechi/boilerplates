@@ -1,14 +1,44 @@
-version: '3'
+version: '3.8'
 
 services:
   traefik:
-    image: "traefik:v2.5"
-    container_name: "traefik"
+    image: traefik:latest
+    container_name: traefik
+    environment:
+      - TZ=Europe/Zurich
+#      - TRAEFIK_LOG_LEVEL=DEBUG
+      - TRAEFIK_ENTRYPOINTS_WEB
+      - TRAEFIK_ENTRYPOINTS_WEB_HTTP_REDIRECTIONS_ENTRYPOINT_TO=websecure
+      - TRAEFIK_ENTRYPOINTS_WEB_ADDRESS=:80
+      - TRAEFIK_ENTRYPOINTS_WEBSECURE
+      - TRAEFIK_ENTRYPOINTS_WEBSECURE_ADDRESS=:443
+      - TRAEFIK_CERTIFICATESRESOLVERS_LE
+      - TRAEFIK_CERTIFICATESRESOLVERS_LE_ACME_EMAIL=${LETSENCRYPT_EMAIL}
+      - TRAEFIK_CERTIFICATESRESOLVERS_LE_ACME_STORAGE=/acme/acme.json
+      - TRAEFIK_CERTIFICATESRESOLVERS_LE_ACME_HTTPCHALLENGE
+      - TRAEFIK_CERTIFICATESRESOLVERS_LE_ACME_HTTPCHALLENGE_ENTRYPOINT=web
+      - TRAEFIK_PROVIDERS_DOCKER
+      - TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT=false
+      - TRAEFIK_PROVIDERS_FILE_DIRECTORY=/etc/traefik/
+      - TRAEFIK_PROVIDERS_FILE_WATCH
+      - TRAEFIK_API_DASHBOARD=false
+#      - TRAEFIK_API_INSECURE=true
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
       # (Optional) Expose Dashboard
-      - "8080:8080"  # Don't do this in production!
+#      - 8080:8080
     volumes:
-      - /etc/traefik:/etc/traefik
+      - ./config:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - acme:/acme
+    restart: unless-stopped
+    networks:
+      - proxy
+#      - whoami_default
+volumes:
+  acme:
+networks:
+  proxy:
+#  whoami_default:
+#    external: true

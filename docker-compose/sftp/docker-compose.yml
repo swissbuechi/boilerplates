@@ -1,0 +1,14 @@
+version: '3.8'
+sftp:
+  image: atmoz/sftp
+  container_name: services_global-sftp_1
+  restart: unless-stopped
+  volumes:
+    - /opt/easyengine/sites/wp.example.ch/app/htdocs/:/home/wp-example-ch
+    - /opt/easyengine/sites/html.example.ch.ch/app/:/home/html-example-ch
+    - ./ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key
+    - ./ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
+    - ./users.conf:/etc/sftp/users.conf:ro
+    - ./login.defs:/etc/login.defs:ro
+  ports:
+    - "2222:22"

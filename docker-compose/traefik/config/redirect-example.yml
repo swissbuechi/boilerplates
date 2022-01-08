@@ -1,0 +1,19 @@
+http:
+  routers:
+    redirect-test:
+      rule: "Host(`example.ch`)"
+      service: service1
+      middlewares:
+        - "test-redirectregex"
+      tls:
+        certresolver: le
+  middlewares:
+    test-redirectregex:
+      redirectRegex:
+        regex: "https://example.ch/(.*)"
+        replacement: "https://redirect.example.ch/"
+  services:
+    service1:
+      loadBalancer:
+        servers:
+        - url: ""

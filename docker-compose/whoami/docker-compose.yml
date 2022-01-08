@@ -1,18 +1,15 @@
-version: '3'
-
-networks:
-  frontend:
-    external: true
+version: '3.8'
 
 services:
   whoami:
     image: traefik/whoami
     container_name: whoami
-    networks:
-      - frontend
-    labels:
+    labels: 
       - 'traefik.enable=true'
-      - 'traefik.http.routers.public.rule=Host(`your-domain.com`)'
-      - 'traefik.http.routers.public.entrypoints=websecure'
-      - 'traefik.http.routers.public.tls=true'
+      - 'traefik.http.routers.public.rule=Host(`example.ch`)'
+      - 'traefik.http.routers.public.entrypoints=web, websecure'
+     # - 'traefik.http.routers.public.tls=true'
+     # - 'traefik.http.routers.public.tls.certresolver=le'
+   # ports:
+   #   - 80:80
     restart: unless-stopped

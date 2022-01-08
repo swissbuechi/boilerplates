@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  bind9:
+    image: ventz/bind:latest
+    container_name: bind9
+    ports:
+      - "53:53"
+      - "53:53/udp"
+    environment: 
+      - DNS: "192.168.1.1"
+     volumes:
+      - ./etc/bind:/etc/bind
+      - ./var/cache/bind:/var/cache/bind
+    restart: unless-stopped
