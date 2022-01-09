@@ -1,0 +1,44 @@
+  version: '3.8'
+  services:
+    nginx-proxy:
+      image: nginxproxy/nginx-proxy
+      container_name: nginx-proxy
+      labels:
+        com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+      ports:
+        - "443:443"
+        - "80:80"
+      volumes:
+        - /var/run/docker.sock:/tmp/docker.sock:ro
+        - ./data/vhost.d:/etc/nginx/vhost.d:ro
+        - ./data/html:/usr/share/nginx/html
+        - ./data/conf.d:/etc/nginx/conf.d
+        - ./data/cert:/etc/nginx/certs:ro
+      environment:
+        - DEFAULT_HOST=example.com
+        - LETSENCRYPT_HOST=example.com
+      restart: unless-stopped
+
+    nginx-proxy-acme:
+      image: nginxproxy/acme-companion
+      container_name: nginx-proxy-acme
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+        - ./data/vhost.d:/etc/nginx/vhost.d
+        - ./data/html:/usr/share/nginx/html
+        - ./data/conf.d:/etc/nginx/conf.d
+        - ./data/cert:/etc/nginx/certs
+        - acme:/etc/acme.sh
+      environment:
+        - DEFAULT_EMAIL=alert@example.com
+      depends_on:
+        - nginx-proxy
+      restart: unless-stopped
+    whoami:
+      image: jwilder/whoami
+      environment:
+        - VIRTUAL_HOST=example.com
+        - LETSENCRYPT_HOST=example.com
+      restart: unless-stopped
+  volumes:
+    acme:

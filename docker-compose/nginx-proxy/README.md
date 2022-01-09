@@ -1,0 +1,35 @@
+# Overview
+
+<https://hub.docker.com/u/nginxproxy>
+
+# Configuration
+
+## Custom SSL Cert
+
+`VIRTUAL_HOST=foo.bar.com` should have a `foo.bar.com.crt` and `foo.bar.com.key`
+
+Custom Cert name:
+
+```yaml
+environment:
+  - CERT_NAME=foo.bar.com
+```
+
+## Do not Redirect to HTTPS
+
+```yaml
+environment:
+  - HTTPS_METHOD=noredirect 
+```
+
+## SSL chipher policy
+
+<https://wiki.mozilla.org/Security/Server_Side_TLS>
+
+Default is `Intermediate`
+
+```yaml
+environment:
+  - SSL_POLICY=Mozilla-Modern
+```
+
