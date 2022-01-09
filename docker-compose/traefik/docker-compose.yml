@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   traefik:
-    image: traefik:latest
+    image: traefik
     container_name: traefik
     environment:
       - TZ=Europe/Zurich
@@ -24,8 +24,8 @@ services:
       - TRAEFIK_API_DASHBOARD=false
 #      - TRAEFIK_API_INSECURE=true
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
       # (Optional) Expose Dashboard
 #      - 8080:8080
     volumes:

@@ -1,9 +1,21 @@
-# Installation
+# Overview
+
+<img src="overview.png" alt="Overview">
+
+- An entrypoint that expose ports to external network.
+- A router to define route filters and link the entrypoint and the middlewares for a service
+- A middleware where you can process the request before the service receive the request
+- A service where you set the loadbalancer and endpoints for your service backend
+
+# Configuration
 
 ## Self-Signed Certificates
-According to traefik's documentation it will automatically generate self-signed Certificates if no Default Certificate is provided. If you'd like to overwrite the self-signed Certificate with your own, uncomment the section for 
+
+It will automatically generate self-signed Certificates if no Default Certificate is provided.
+
+### file
+
 ```yaml 
-# (Optional) Overwrite Default Certificates
 tls:
   stores:
     default:
@@ -11,4 +23,65 @@ tls:
         certFile: /etc/traefik/certs/cert.pem
         keyFile: /etc/traefik/certs/cert-key.pem
 ```
-Replace the `/etc/traefik/certs/cert.pem` with your certificate file, and the `/etc/traefik/certs/cert-key.pem` with your certificate key.
+
+Replace the `/etc/traefik/certs/cert.pem` with your certificate file, and the `/etc/traefik/certs/cert-key.pem` with
+your certificate key.
+
+## Path based rules
+
+```yaml
+frontend:
+  labels:
+    - "traefik.http.routers.frontend.rule=Host(`localhost`)"
+api:
+  labels:
+    - "traefik.http.routers.api.rule=Host(`localhost`) && Path(`/api`)"
+```
+
+## Redirect to https
+
+### file
+
+```yaml
+http:
+  middlewares:
+    test-redirectscheme:
+      redirectScheme:
+        scheme: https
+        permanent: true
+```
+
+### docker
+
+```yaml
+labels:
+  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
+  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+```
+
+## Redirect to custom location
+
+### file
+
+```yaml
+http:
+  routers:
+    redirect-test:
+      rule: "Host(`example.ch`)"
+      service: service1
+      middlewares:
+        - "test-redirectregex"
+      tls:
+        certresolver: le
+  middlewares:
+    test-redirectregex:
+      redirectRegex:
+        regex: "https://example.ch/(.*)"
+        replacement: "https://redirect.example.ch/"
+        permanent: true
+  services:
+    service1:
+      loadBalancer:
+        servers:
+          - url: ""
+```

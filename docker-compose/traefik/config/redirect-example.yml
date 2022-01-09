@@ -12,6 +12,7 @@ http:
       redirectRegex:
         regex: "https://example.ch/(.*)"
         replacement: "https://redirect.example.ch/"
+        permanent: true
   services:
     service1:
       loadBalancer:
