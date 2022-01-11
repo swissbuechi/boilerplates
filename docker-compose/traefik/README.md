@@ -9,6 +9,27 @@
 
 # Configuration
 
+## Expose Service
+
+### docker
+
+[docker-compose example](https://github.com/swissbuechi/boilerplates/tree/main/docker-compose/whoami)
+
+### file
+
+[file example](https://github.com/swissbuechi/boilerplates/blob/main/docker-compose/traefik/config/service-example.yml)
+
+## Custom Port
+
+Default is auto detect port
+
+### docker
+
+```yaml
+labels:
+  - 'traefik.http.services.<YOUR-SERVICE-NAME>.loadbalancer.server.port=9763'
+```
+
 ## Self-Signed Certificates
 
 It will automatically generate self-signed Certificates if no Default Certificate is provided.
@@ -32,10 +53,10 @@ your certificate key.
 ```yaml
 frontend:
   labels:
-    - "traefik.http.routers.frontend.rule=Host(`localhost`)"
+    - "traefik.http.routers.<YOUR-SERVICE-NAME-1>.rule=Host(`localhost`)"
 api:
   labels:
-    - "traefik.http.routers.api.rule=Host(`localhost`) && Path(`/api`)"
+    - "traefik.http.routers.<YOUR-SERVICE-NAME-2>.rule=Host(`localhost`) && Path(`/api`)"
 ```
 
 ## Redirect to https
@@ -55,8 +76,8 @@ http:
 
 ```yaml
 labels:
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.scheme=https"
-  - "traefik.http.middlewares.test-redirectscheme.redirectscheme.permanent=true"
+  - "traefik.http.middlewares.<YOUR-MIDDLEWARE-NAME>.redirectscheme.scheme=https"
+  - "traefik.http.middlewares.<YOUR-MIDDLEWARE-NAME>.redirectscheme.permanent=true"
 ```
 
 ## Redirect to custom location

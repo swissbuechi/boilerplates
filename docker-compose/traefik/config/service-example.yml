@@ -1,0 +1,12 @@
+http:
+  routers:
+    your-service-name:
+      rule: "Host(`example.ch`)"
+      service: your-service-name
+      tls:
+        certresolver: le
+  services:
+    your-service-name:
+      loadBalancer:
+        servers:
+          - url: "<your-service-url>"

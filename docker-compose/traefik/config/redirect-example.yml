@@ -17,4 +17,4 @@ http:
     service1:
       loadBalancer:
         servers:
-        - url: ""
+          - url: ""
