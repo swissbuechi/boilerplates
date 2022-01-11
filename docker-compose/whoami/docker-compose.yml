@@ -7,9 +7,9 @@ services:
     labels: 
       - 'traefik.enable=true'
       - 'traefik.http.routers.public.rule=Host(`example.ch`)'
-      - 'traefik.http.routers.public.entrypoints=web, websecure'
      # - 'traefik.http.routers.public.tls=true'
      # - 'traefik.http.routers.public.tls.certresolver=le'
+     # - 'traefik.http.routers.public.entrypoints=web, websecure'
    # ports:
    #   - 80:80
     restart: unless-stopped
