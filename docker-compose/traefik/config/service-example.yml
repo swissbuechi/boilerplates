@@ -9,4 +9,6 @@ http:
     your-service-name:
       loadBalancer:
         servers:
-          - url: "<your-service-url>"
+          - url: "<your-service-url-1>"
+          - url: "<your-service-url-2>"
+          - url: "<your-service-url-3>"
