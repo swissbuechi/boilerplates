@@ -1,0 +1,13 @@
+# ansible-galaxy install jnv.unattended-upgrades
+
+- hosts: all
+  roles:
+    - role: jnv.unattended-upgrades
+      when: ansible_facts['os_family'] == 'Debian'
+      unattended_automatic_reboot:
+      unattended_automatic_reboot_time: "20:00"
+      unattended_origins_patterns:
+        - 'origin=Ubuntu,archive=${distro_codename}-security'
+        - 'o=Ubuntu,a=${distro_codename}'
+        - 'o=Ubuntu,a=${distro_codename}-updates'
+        - 'o=Ubuntu,a=${distro_codename}-proposed-updates'
