@@ -18,6 +18,8 @@ services:
       - DEFAULT_HOST=example.com
       - LETSENCRYPT_HOST=example.com
     restart: unless-stopped
+  #    networks:
+  #      - network_<app>_proxy
 
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
@@ -42,3 +44,7 @@ services:
     restart: unless-stopped
 volumes:
   acme:
+
+#networks:
+#  network_<app>_proxy:
+#    external: true
