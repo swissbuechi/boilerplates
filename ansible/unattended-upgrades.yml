@@ -1,6 +1,7 @@
 # ansible-galaxy install jnv.unattended-upgrades
 
 - hosts: all
+  become: yes
   roles:
     - role: jnv.unattended-upgrades
       when: ansible_facts['os_family'] == 'Debian'

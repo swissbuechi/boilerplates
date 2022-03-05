@@ -11,3 +11,9 @@
 # Test
 
 `ansible all -m ping`
+
+# Commands
+## Playbooks
+```shell
+ansible-playbook <playbook.yml> -K #Become
+```
