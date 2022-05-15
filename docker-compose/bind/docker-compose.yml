@@ -2,14 +2,17 @@ version: '3.8'
 
 services:
   bind9:
-    image: ventz/bind:latest
+    image: ubuntu/bind9:latest
     container_name: bind9
     ports:
-      - "53:53"
+      - "53:53/tcp"
       - "53:53/udp"
-    environment: 
-      - DNS: "192.168.1.1"
-     volumes:
-      - ./etc/bind:/etc/bind
-      - ./var/cache/bind:/var/cache/bind
+    environment:
+      - TZ=UTC
+    volumes:
+      - ./config:/etc/bind
+      - ./records:/var/lib/bind
+      - bind9cache:/var/cache/bind
     restart: unless-stopped
+volumes:
+  bind9cache:
