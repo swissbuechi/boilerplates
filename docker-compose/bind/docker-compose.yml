@@ -10,7 +10,7 @@ services:
     environment:
       - TZ=UTC
     volumes:
-      - ./config:/etc/bind
+      - ./config/named.conf:/etc/bind/named.conf
       - ./records:/var/lib/bind
       - bind9cache:/var/cache/bind
     restart: unless-stopped

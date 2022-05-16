@@ -1,0 +1,18 @@
+$TTL 86400
+@ IN SOA dns-primary.ourdomain.lan. admin.ourdomain.lan. (
+    2019061800 ;Serial
+    3600 ;Refresh
+    1800 ;Retry
+    604800 ;Expire
+    86400 ;Minimum TTL
+)
+;Name Server Information
+@ IN NS dns-primary.ourdomain.lan.
+
+;IP for Name Server
+dns-primary IN A 192.168.1.136
+
+;A Record for IP address to Hostname
+wiki IN A 192.168.1.13
+www IN A 192.168.1.14
+devel IN A 192.168.1.15
