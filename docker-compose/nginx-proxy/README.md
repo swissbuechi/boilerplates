@@ -4,16 +4,18 @@
 
 # Configuration
 
-# API Virtual Path
+## API Virtual Path
 
-## API Host
+### API Host
 
 `VIRTUAL_HOST=<fqdn>`
+
 `VIRTUAL_PATH=/api/v1.0`
 
-## APP Host
+### APP Host
 
 `VIRTUAL_HOST=<fqdn>`
+
 `VIRTUAL_PATH=/`
 
 ## Custom SSL Cert
