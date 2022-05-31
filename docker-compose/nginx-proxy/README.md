@@ -4,6 +4,18 @@
 
 # Configuration
 
+# API Virtual Path
+
+## API Host
+
+`VIRTUAL_HOST=<fqdn>`
+`VIRTUAL_PATH=/api/v1.0`
+
+## APP Host
+
+`VIRTUAL_HOST=<fqdn>`
+`VIRTUAL_PATH=/`
+
 ## Custom SSL Cert
 
 `VIRTUAL_HOST=foo.bar.com` should have a `foo.bar.com.crt` and `foo.bar.com.key`
