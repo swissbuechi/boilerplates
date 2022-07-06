@@ -1,0 +1,17 @@
+# ansible-galaxy install  weareinteractive.apt
+# https://github.com/weareinteractive/ansible-apt
+
+#Enable Auto Updates
+- hosts: all
+  become: yes
+  roles:
+    - weareinteractive.apt
+  vars:
+    apt_unattended_upgrades: yes
+    apt_auto_clean_interval: 7
+    apt_unattended_upgrades_minimal_steps: yes
+    apt_unattended_upgrades_allowed:
+      - ${distro_id}:${distro_codename}-security
+#      - ${distro_id}:${distro_codename}-updates
+    apt_unattended_upgrades_automatic_reboot: yes
+    apt_unattended_upgrades_automatic_reboot_time: 02:00
