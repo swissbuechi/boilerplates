@@ -1,0 +1,13 @@
+version: "3"
+services:
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    #04:00 every wednesday
+#    command: --schedule "0 0 4 * * 3" --cleanup --rolling-restart
+    command: --run-once --cleanup --rolling-restart
