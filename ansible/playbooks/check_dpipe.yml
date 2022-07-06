@@ -1,0 +1,11 @@
+- hosts: all
+
+  #become: yes
+  tasks:
+
+  # Run script to check dpipe
+  # --
+  #
+  - name: check dpipe
+    script: ./dpipe.sh
+    

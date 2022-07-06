@@ -1,0 +1,9 @@
+#SSH
+security_ssh_password_authentication: "yes"
+security_fail2ban_enabled: false
+
+#Updates
+security_autoupdate_enabled: true
+security_autoupdate_blacklist: []
+security_autoupdate_reboot: true
+security_autoupdate_reboot_time: "02:00"

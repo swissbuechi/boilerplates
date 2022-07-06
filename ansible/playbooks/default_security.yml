@@ -1,0 +1,7 @@
+# ansible-galaxy install geerlingguy.security
+- hosts: all
+  become: yes
+  vars_files:
+    - vars/default_security.yml
+  roles:
+    - geerlingguy.security
