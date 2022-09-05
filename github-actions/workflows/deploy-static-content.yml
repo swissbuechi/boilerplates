@@ -1,0 +1,26 @@
+name: scp files
+on:
+  push:
+    branches: [ 'main' ]
+jobs:
+
+  deploy:
+    name: deploy static content
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: remove unnecessary files
+        run: rm -rf .gitignore README.md .github .git
+
+      - name: copy files via sftp
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          local_path: './'
+          remote_path: '/htdocs'
+          sftp_only: true
+#          delete_remote_files: true
