@@ -29,6 +29,12 @@ environment:
   - CERT_NAME=foo.bar.com
 ```
 
+## Do not use HTTPS
+
+```yaml
+  - HTTPS_METHOD=nohttps
+```
+
 ## Do not Redirect to HTTPS
 
 ```yaml
