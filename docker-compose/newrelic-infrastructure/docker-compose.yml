@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  agent:
+    image: newrelic/infrastructure:latest
+    container_name: services_global-newrelic-infra_1
+    cap_add:
+      - SYS_PTRACE
+    network_mode: host
+    pid: host
+    #    cgroupns: host
+    privileged: true
+    volumes:
+      - "/:/host:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - NRIA_LICENSE_KEY=<key>
+    restart: unless-stopped
