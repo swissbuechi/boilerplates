@@ -10,4 +10,5 @@ services:
     restart: unless-stopped
     #04:00 every wednesday
 #    command: --schedule "0 0 4 * * 3" --cleanup --rolling-restart
+# --label-enable # if you only want to update containers with lables "com.centurylinklabs.watchtower.enable=true"
     command: --run-once --cleanup --rolling-restart
