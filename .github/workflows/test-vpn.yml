@@ -16,21 +16,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Update apt cache
-        run: sudo apt update
-
       - name: Install OpenVPN
-        run: sudo apt --assume-yes --no-install-recommends install openvpn
+        run: |
+          sudo apt update
+          sudo apt --assume-yes --no-install-recommends install openvpn
 
-      - name: Setup VPN config CA
-        run: echo "${{ secrets.CA_CRT }}" > ca.crt
-
-      - name: Setup VPN config secret
-        run: echo "${{ secrets.SECRET_USERNAME_PASSWORD }}" > secret.txt
-  #          echo "${{ secrets.USER_CRT }}" > user.crt
-  #          echo "${{ secrets.USER_KEY }}" > user.key
-
-  #          echo "${{ secrets.TLS_KEY }}" > tls.key
+      - name: Setup VPN config
+        run: | 
+          echo "${{ secrets.CA_CRT }}" > ca.crt
+          echo "${{ secrets.SECRET_USERNAME_PASSWORD }}" > secret.txt
 
       - name: Connect VPN
         run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
