@@ -13,18 +13,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Update APT Cache
+      - name: Update apt cache
         run: sudo apt update
 
       - name: Install OpenVPN
         run: sudo apt --assume-yes --no-install-recommends install openvpn
 
-      - name: Setup VPN config
-        run: |
-          echo "${{ secrets.CA_CRT }}" > ca.crt
+      - name: Setup VPN config CA
+        run: echo "${{ secrets.CA_CRT }}" > ca.crt
+
+      - name: Setup VPN config secret
+        run: echo "${{ secrets.SECRET_USERNAME_PASSWORD }}" > secret.txt
 #          echo "${{ secrets.USER_CRT }}" > user.crt
 #          echo "${{ secrets.USER_KEY }}" > user.key
-          echo "${{ secrets.SECRET_USERNAME_PASSWORD }}" > secret.txt
+
 #          echo "${{ secrets.TLS_KEY }}" > tls.key
 
       - name: Connect VPN
@@ -41,13 +43,12 @@ jobs:
 
       - name: Kill VPN connection
         if: always()
-        run: |
-          sudo chmod 777 vpn.log
-          sudo killall openvpn          
+        run: sudo killall openvpn
+#          sudo chmod 777 vpn.log
 
-      - name: Upload VPN logs
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: VPN logs
-          path: vpn.log
+#      - name: Upload VPN logs
+#        uses: actions/upload-artifact@v2
+#        if: always()
+#        with:
+#          name: VPN logs
+#          path: vpn.log
