@@ -2,10 +2,17 @@ name: Test VPN Connection
 
 on:
   workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Install OpenVPN
         run: |
           sudo apt update
