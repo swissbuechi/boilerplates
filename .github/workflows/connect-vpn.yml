@@ -34,8 +34,8 @@ jobs:
 
       - name: Setup VPN host and port
         run: |
-          sed -i 's/AUTO_REPLACED_HOST/'"${{ secrets.VPN_HOST }}"'/g' {{ env.OVPN_CONFIG }}
-          sed -i 's/AUTO_REPLACED_PORT/'"${{ secrets.VPN_PORT }}"'/g' {{ env.OVPN_CONFIG }}
+          sed -i 's/AUTO_REPLACED_HOST/'"${{ secrets.VPN_HOST }}"'/g' ${{ env.OVPN_CONFIG }}
+          sed -i 's/AUTO_REPLACED_PORT/'"${{ secrets.VPN_PORT }}"'/g' ${{ env.OVPN_CONFIG }}
 
       - name: Add VPN TOTP
         env:
@@ -46,7 +46,7 @@ jobs:
           sed -i '$ s/$/'"$OTP"'/' secret.txt
 
       - name: Connect VPN
-        run: sudo openvpn --config {{ env.OVPN_CONFIG }} --log "vpn.log" --daemon
+        run: sudo openvpn --config ${{ env.OVPN_CONFIG }} --log "vpn.log" --daemon
 
       - name: Wait for a VPN connection
         timeout-minutes: 1
