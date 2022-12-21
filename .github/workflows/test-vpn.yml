@@ -16,15 +16,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Set Timezone
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Europe/Zurich"
+
       - name: Install OpenVPN
         run: |
           sudo apt update
-          sudo apt --assume-yes --no-install-recommends install openvpn
+          sudo apt --assume-yes --no-install-recommends install openvpn oathtool
 
       - name: Setup VPN config
         run: | 
-          echo "${{ secrets.CA_CRT }}" > ca.crt
-          echo "${{ secrets.SECRET_USERNAME_PASSWORD }}" > secret.txt
+          echo "${{ secrets.VPN_CA_CRT }}" > ca.crt
+          echo "${{ secrets.VPN_USERNAME_PASSWORD }}" > secret.txt
+
+      - name: Add VPN TOTP
+        run: |
+          OTP=$(oathtool --totp ${{ secrets.VPN_OTP }})
+          sed -i '$ s/$/'"$OTP"'/' secret.txt
+          cat secret.txt
+          timedatectl
 
       - name: Connect VPN
         run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
