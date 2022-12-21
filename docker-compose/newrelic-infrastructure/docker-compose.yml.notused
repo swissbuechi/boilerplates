@@ -13,6 +13,7 @@ services:
     volumes:
       - "/:/host:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./logging.yml:/etc/newrelic-infra/logging.d/logging.yml"
     environment:
       - NRIA_LICENSE_KEY=<key>
     restart: unless-stopped

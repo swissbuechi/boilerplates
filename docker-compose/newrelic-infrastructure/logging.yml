@@ -1,0 +1,3 @@
+logs:
+  - name: docker-logs
+    file: /host/var/lib/docker/containers/*/*.log

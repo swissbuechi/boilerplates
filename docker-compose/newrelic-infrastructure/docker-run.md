@@ -1,0 +1,3 @@
+You can not use teh docker-compose.yml becouse the " " is not supported yet
+
+`docker run -d \--name services_global-newrelic-infra_1 \--network=host \--cap-add=SYS_PTRACE \--privileged \--pid=host \--cgroupns=host \-v "/:/host:ro" \-v "/var/run/docker.sock:/var/run/docker.sock" \-v "/opt/newrelic/logging.yml:/etc/newrelic-infra/logging.d/logging.yml" \-e NRIA_LICENSE_KEY=<key> \--label=com.centurylinklabs.watchtower.enable=true \--rm \newrelic/infrastructure:latest`
