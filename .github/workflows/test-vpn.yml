@@ -3,58 +3,58 @@ name: Test VPN Connection
 on:
   workflow_dispatch:
 
+env:
+  PING_HOST: 192.168.1.1
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
 
-  env:
-    PING_HOST: 192.168.1.1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Update apt cache
+        run: sudo apt update
 
-    - name: Update apt cache
-      run: sudo apt update
+      - name: Install OpenVPN
+        run: sudo apt --assume-yes --no-install-recommends install openvpn
 
-    - name: Install OpenVPN
-      run: sudo apt --assume-yes --no-install-recommends install openvpn
+      - name: Setup VPN config CA
+        run: echo "${{ secrets.CA_CRT }}" > ca.crt
 
-    - name: Setup VPN config CA
-      run: echo "${{ secrets.CA_CRT }}" > ca.crt
+      - name: Setup VPN config secret
+        run: echo "${{ secrets.SECRET_USERNAME_PASSWORD }}" > secret.txt
+  #          echo "${{ secrets.USER_CRT }}" > user.crt
+  #          echo "${{ secrets.USER_KEY }}" > user.key
 
-    - name: Setup VPN config secret
-      run: echo "${{ secrets.SECRET_USERNAME_PASSWORD }}" > secret.txt
-#          echo "${{ secrets.USER_CRT }}" > user.crt
-#          echo "${{ secrets.USER_KEY }}" > user.key
+  #          echo "${{ secrets.TLS_KEY }}" > tls.key
 
-#          echo "${{ secrets.TLS_KEY }}" > tls.key
+      - name: Connect VPN
+        run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
 
-    - name: Connect VPN
-      run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
+      - name: Wait for a VPN connection
+        timeout-minutes: 1
+        run: until ping -c1 ${{ env.PING_HOST }}; do sleep 2; done
+        # OR
+  #        run: until dig @your-dns-resolver your-server-address A +time=1; do sleep 2; done
 
-    - name: Wait for a VPN connection
-      timeout-minutes: 1
-      run: until ping -c1 ${{ env.PING_HOST }}; do sleep 2; done
-      # OR
-#        run: until dig @your-dns-resolver your-server-address A +time=1; do sleep 2; done
+      - name: Deploy
+        run: ping ${{ env.PING_HOST }} -c5
 
-    - name: Deploy
-      run: ping ${{ env.PING_HOST }} -c5
+      - name: Kill VPN connection
+        if: always()
+        run: sudo killall openvpn
 
-    - name: Kill VPN connection
-      if: always()
-      run: sudo killall openvpn
+      - name: Log VPN connection
+        if: always()
+        run: sudo chmod 777 vpn.log
 
-    - name: Log VPN connection
-      if: always()
-      run: sudo chmod 777 vpn.log
-
-    - name: Upload VPN logs
-      uses: actions/upload-artifact@v2
-      if: always()
-      with:
-        name: VPN logs
-        path: vpn.log
+      - name: Upload VPN logs
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: VPN logs
+          path: vpn.log
