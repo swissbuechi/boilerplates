@@ -31,9 +31,6 @@ jobs:
         run: | 
           echo "${{ secrets.VPN_CA_CRT }}" > ca.crt
           echo "${{ secrets.VPN_USERNAME_PASSWORD }}" > secret.txt
-
-      - name: Setup VPN host and port
-        run: |
           sed -i 's/AUTO_REPLACED_HOST/'"${{ secrets.VPN_HOST }}"'/g' ${{ env.OVPN_CONFIG }}
           sed -i 's/AUTO_REPLACED_PORT/'"${{ secrets.VPN_PORT }}"'/g' ${{ env.OVPN_CONFIG }}
 
@@ -59,9 +56,11 @@ jobs:
 
       - name: Kill VPN connection
         if: always()
-        run: | 
-          sudo killall openvpn
-          sudo chmod 777 vpn.log
+        run: sudo killall openvpn
+
+      - name: Publish VPN log
+        if: always()
+        run: sudo chmod 777 vpn.log
 
       - name: Upload VPN logs
         uses: actions/upload-artifact@v3
