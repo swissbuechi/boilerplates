@@ -5,7 +5,6 @@ on:
 
 env:
   PING_HOST: 192.168.1.1
-  VPN_OTP: ${{ secrets.VPN_OTP }}
 
 jobs:
   deploy:
@@ -33,10 +32,12 @@ jobs:
           echo "${{ secrets.VPN_USERNAME_PASSWORD }}" > secret.txt
 
       - name: Add VPN TOTP
+        env:
+          VPN_OTP: ${{ secrets.VPN_OTP }}
+        if: env.VPN_OTP != null
         run: |
           OTP=$(oathtool --totp ${{ secrets.VPN_OTP }})
           sed -i '$ s/$/'"$OTP"'/' secret.txt
-        if: ${{ env.VPN_OTP != 0 }}
 
       - name: Connect VPN
         run: sudo openvpn --config ".github/vpn/config.ovpn" --log "vpn.log" --daemon
