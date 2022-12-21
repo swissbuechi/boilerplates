@@ -43,7 +43,7 @@ jobs:
           sed -i '$ s/$/'"$OTP"'/' secret.txt
 
       - name: Connect VPN
-        run: sudo openvpn --config ${{ env.OVPN_CONFIG }} --log "vpn.log" --daemon
+        run: sudo openvpn --config ${{ env.OVPN_CONFIG }} --auth-user-pass secret.txt --log "vpn.log" --daemon
 
       - name: Wait for a VPN connection
         timeout-minutes: 1
