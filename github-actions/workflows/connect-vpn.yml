@@ -1,14 +1,13 @@
-name: Test VPN Connection
+name: Test VPN
 
 on:
   workflow_dispatch:
 
 env:
-  PING_HOST: 192.168.1.1
-  OVPN_CONFIG: .github/vpn/config.ovpn
+  VPN_DNS_SERVER: 192.168.1.1
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -17,54 +16,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set Timezone
-        uses: szenius/set-timezone@v1.1
-        with:
-          timezoneLinux: "Europe/Zurich"
-
-      - name: Install OpenVPN
-        run: |
-          sudo apt update
-          sudo apt --assume-yes --no-install-recommends install openvpn oathtool
-
-      - name: Setup VPN config
-        run: | 
-          echo "${{ secrets.VPN_CA_CRT }}" > ca.crt
-          echo "${{ secrets.VPN_USERNAME_PASSWORD }}" > secret.txt
-          sed -i 's/AUTO_REPLACED_HOST/'"${{ secrets.VPN_HOST }}"'/g' ${{ env.OVPN_CONFIG }}
-          sed -i 's/AUTO_REPLACED_PORT/'"${{ secrets.VPN_PORT }}"'/g' ${{ env.OVPN_CONFIG }}
-
-      - name: Add VPN TOTP
-        env:
-          VPN_OTP: ${{ secrets.VPN_OTP }}
-        if: env.VPN_OTP != null
-        run: |
-          OTP=$(oathtool --totp ${{ secrets.VPN_OTP }})
-          sed -i '$ s/$/'"$OTP"'/' secret.txt
-
       - name: Connect VPN
-        run: sudo openvpn --config ${{ env.OVPN_CONFIG }} --auth-user-pass secret.txt --log "vpn.log" --daemon
-
-      - name: Wait for a VPN connection
-        timeout-minutes: 1
-        run: until ping -c1 ${{ env.PING_HOST }}; do sleep 2; done
-        # OR
-  #        run: until dig @your-dns-resolver your-server-address A +time=1; do sleep 2; done
-
-      - name: Deploy
-        run: ping ${{ env.PING_HOST }} -c5
-
-      - name: Kill VPN connection
-        if: always()
-        run: sudo killall openvpn
-
-      - name: Publish VPN log
-        if: always()
-        run: sudo chmod 777 vpn.log
-
-      - name: Upload VPN logs
-        uses: actions/upload-artifact@v3
-        if: always()
+        uses: ./
         with:
-          name: VPN logs
-          path: vpn.log
+          host: ${{ secrets.VPN_HOST }}
+          username: ${{ secrets.VPN_USERNAME }}
+          password: ${{ secrets.VPN_PASSWORD }}
+          #          otp-hex: ${{ secrets.VPN_OTP }}
+          #          otp-timezone: 'Europe/Zurich'
+          dns-server: ${{ env.VPN_DNS_SERVER }}
+          ca: ${{ secrets.VPN_CA_CRT }}
+          #          cert: ${{ secrets.VPN_CERT_CRT }}
+          #          cert-key: ${{ secrets.VPN_CERT_KEY }}
+          test-ping-ip-host: 192.168.1.2
+      #          test-dns-host: google.ch
+
+      - name: Test Ping
+        run: ping ${{ env.VPN_DNS_SERVER }} -c5
+
+      - name: Test DNS
+        run: dig google.ch
