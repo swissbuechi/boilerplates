@@ -1,7 +1,9 @@
-`sudo systemctl stop systemd-resolved`
 
-`sudo systemctl disable systemd-resolved`
+`sudo nano /etc/systemd/resolved.conf`
 
+`DNSStubListener=no`
+
+`sudo systemctl restart systemd-resolved`
 
 ## Config Options
 
