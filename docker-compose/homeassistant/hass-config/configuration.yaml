@@ -1,0 +1,23 @@
+default_config:
+# For homeassistant v2021.7.0 and above add this http block
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - XXX.XXX.XXX.XXX # Add the IP address of the proxy server
+panel_iframe:
+  configurator:
+    title: Configurator
+    icon: mdi:wrench
+    url: http://<hostip>:3218/
+    require_admin: true
+  nodered:
+    title: Node-Red
+    icon: mdi:shuffle-variant
+    url: http://<hostip>:1880/
+    require_admin: true
+mqtt:
+  broker: <hostip>
+
+recorder:
+  db_url: mysql://homeassistant:<ha_dbdatabasepassword>@<hostip>/ha_db?charset=utf8
+  purge_keep_days: 30
