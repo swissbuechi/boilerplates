@@ -36,6 +36,7 @@ services:
     depends_on:
       - nginx-proxy
     restart: unless-stopped
+
   whoami:
     image: jwilder/whoami
     environment:

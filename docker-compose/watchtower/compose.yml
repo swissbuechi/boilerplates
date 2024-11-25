@@ -1,0 +1,17 @@
+services:
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+      # docker login ghcr.io --username <username>
+      # - /home/raphi/.docker/config.json:/config.json:ro
+      # - /root/.docker/config.json:/config.json
+    restart: unless-stopped
+    #04:00 every wednesday
+    command: --schedule "0 0 4 * * 3" --cleanup --rolling-restart
+# --label-enable
+    # command: --run-once --cleanup --rolling-restart
+    # labels:
+    #   - "com.centurylinklabs.watchtower.enable=true"
